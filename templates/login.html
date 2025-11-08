@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intellecta - Login</title>
+    <style>
+        /* Basic Reset and Box-Sizing */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body and Background Styling - MATCHES Register Page */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Same dramatic gradient background */
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+
+        /* Container Styling - MATCHES Register Page */
+        .login-container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 800px; /* Kept slightly narrower for a login focus */
+            margin-top: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Logo Styling - MATCHES Register Page */
+        .logo {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Heading Styles - MATCHES Register Page */
+        h1 {
+            color: #ff8a00;
+            margin-bottom: 10px;
+            font-size: 2em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            color: #ddd;
+            margin-bottom: 30px;
+        }
+
+        /* Input Group Styles - MATCHES Register Page */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #555;
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #ff8a00;
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 5px rgba(255, 138, 0, 0.5);
+        }
+
+        .input-group input::placeholder {
+            color: #aaa;
+        }
+
+        /* Button Styling - MATCHES Register Page */
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            transition: transform 0.1s, box-shadow 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-button:hover {
+            box-shadow: 0 0 15px rgba(255, 138, 0, 0.5);
+        }
+
+        .login-button:active {
+            transform: scale(0.99);
+        }
+
+        /* Options/Link Styling - MATCHES Register Page */
+        .options {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #ddd;
+        }
+
+        .options a {
+            color: #ff8a00;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .options a:hover {
+            color: #da1b60;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">INTELLECTA</div>
+        <h1>Sign In</h1>
+        <p>Enter your credentials to access your account</p>
+        
+        <form id="loginForm" method="post" action="">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="text" id="email" placeholder="Enter your email" name="email" autocomplete="off" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" name="password" autocomplete="off" required>
+            </div>
+            
+            <button type="submit" class="login-button">Login</button>
+        </form>
+        <span>
+            {% if error %}
+                <p style="color: #ff6b6b; margin-top: 15px;">{{ error }}</p>
+            {% endif %}
+        </span>
+        <div class="options">
+            <p style="margin-top: 10px;">Don't have an account? <a href="../signup">Register Now</a></p>
+        </div>
+    </div>
+
+</body>
+</html>

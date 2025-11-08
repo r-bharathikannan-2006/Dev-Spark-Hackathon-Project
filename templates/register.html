@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intellecta - Register</title>
+    <style>
+        /* Basic Reset and Box-Sizing */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: #ff8a00;
+            margin-bottom: 10px;
+            font-size: 2em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            color: #ddd;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #555;
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #ff8a00;
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 5px rgba(255, 138, 0, 0.5);
+        }
+
+        .input-group input::placeholder {
+            color: #aaa;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            transition: transform 0.1s, box-shadow 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-button:hover {
+            box-shadow: 0 0 15px rgba(255, 138, 0, 0.5);
+        }
+
+        .login-button:active {
+            transform: scale(0.99);
+        }
+
+        .options {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #ddd;
+        }
+
+        .options a {
+            color: #ff8a00;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .options a:hover {
+            color: #da1b60;
+            text-decoration: underline;
+        }
+
+        .logo {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">INTELLECTA</div>
+        <h1>Create Account</h1>
+        <p>Join our community to access personalized features</p>
+        
+        <form id="registrationForm" method="post" action="">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username" name="username" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" name="email" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Create a password" name="password" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" placeholder="Confirm your password" name="password1" required>
+            </div>
+            
+            <button type="submit" class="login-button">Register</button>
+        </form>
+        <span>
+            {% if error %}
+                <p style="color: #ff6b6b; margin-top: 15px;">{{ error }}</p>
+            {% endif %}
+        </span>
+        <div class="options">
+            <p>Already have an account? <a href="../login">Sign In</a></p>
+        </div>
+    </div>
+</body>
+</html>

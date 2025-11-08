@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>CogniTube Search Results</title>
+    <title>Intellecta Search Results</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
             margin: 0;
             padding: 20px;
-            color: #444;
+            color: white;
             min-height: 100vh;
         }
 
@@ -26,7 +26,7 @@
 
         .video-container {
             display: flex;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
             border-radius: 16px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
@@ -46,6 +46,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
+            background: radial-gradient(circle, rgba(255,138,0,0.12) 0%, transparent 70%);
             transform: scale(0);
             transition: transform 0.4s ease;
             z-index: 0;
@@ -56,7 +57,7 @@
         }
 
         .video-container:hover {
-            transform: translateY(-2px) scale(1.01);
+            transform: translateY(-6px) scale(1.01);
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
         }
 
@@ -115,7 +116,7 @@
         .video-title {
             font-size: 1.2em;
             font-weight: 600;
-            color: #1a1a1a;
+            color: #ffffff;
             margin: 0 0 6px 0;
             line-height: 1.4;
             display: -webkit-box;
@@ -127,17 +128,21 @@
         }
 
         .video-container:hover .video-title {
-            color: #0077ff;
+            color: #ff8a00;
         }
 
         .video-info {
             font-size: 0.9em;
-            color: #666;
+            color: #ddd;
             margin-top: 4px;
             line-height: 1.4;
         }
 
-        .video-channel,
+        .video-channel{
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+        
         .video-views {
             display: inline-block;
             margin-right: 14px;
@@ -184,22 +189,21 @@
     </style>
 </head>
 <body>
-    <h1 class="text-4xl md:text-5xl font-bold mb-8 w-full text-center">
-        <span>Cogni</span><span class="text-red-600">Tube</span> - Search results
-    </h1>
+
     <div class="search-results-container">
         {% for video in videos_list %}
-            <a href="player/{{ video.video_id }}/" class="video-container">
+            <a href="../player/{{ video.video_id }}/" class="video-container">
                 <div class="video-thumbnail">
                     <img src="https://img.youtube.com/vi/{{ video.video_id }}/hqdefault.jpg" alt="Video Thumbnail">
                     <span class="video-length">{{video.duration}}</span>
                 </div>
                 <div class="video-details">
                     <h3 class="video-title">{{video.title}}</h3>
-                    <h4>{{video.channel}}</h4>
+                    <h4 class="video-channel">{{video.channel}}</h4>
                 </div>
             </a>
         {% endfor %}
     </div>
+
 </body>
 </html>

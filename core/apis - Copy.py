@@ -77,8 +77,16 @@ def search_video(query, maxResults=10):
         return "Search failed. Please try reloading, using different keywords, or provide feedback if the problem persists."
 
 
-        
-def get_video_summary(video_id):
+def generate_questions(video_id):
+    """Return list of dictionary which represents question as:
+        - "question": The quiz question.
+        - 1: Option 1
+        - 2: Option 2
+        - 3: Option 3
+        - 4: Option 4
+        - "correct": The option number of the correct option.
+    """
+    
     try:
         ytt_api = YouTubeTranscriptApi()
         transcript = ytt_api.fetch(video_id, languages=['en'])
@@ -95,38 +103,96 @@ def get_video_summary(video_id):
         'x-goog-api-key': api_key
     }
     prompt = f"""
-        Generate a well structured content of this transcript. Don't miss out any content.
+        Generate a well structured content with this transcript. Don't miss out any content.
 
         {full_transript}
 
         ["NOTE: Dont respond with intro or outro, only respond with the structured content."]
         ["NOTE: So that I can straightly store that in a variable by accessing your response using api."]
-        ["NOTE: Do not format the output in markdown language."]
-        ["NOTE: Make the summary concise and to the point."]
-        ["NOTE: Output should be only string no formatting, do not include any bullet points or numbering. Or dont include **"]
-        ["NOTE: Output should be maximum 200 words."]
-
         """
     data = {
         'contents': [{'parts': [{'text': prompt}]}]
     }
-    print(f"https://www.youtube.com/watch?v={video_id}")
     try:
         response = requests.post(ai_url , headers=headers, data=json.dumps(data))
         result = response.json()
-        summary_string = result['candidates'][0]['content']['parts'][0]['text'] 
+        content_obj = result['candidates'][0]['content']['parts'][0]['text'] 
     except:
-        return "Oops, something went wrong while generating the quiz. Please try reloading the page, and if the problem persists, feel free to provide feedback.", "Error while generating summary."
+        return "Oops, something went wrong while generating the quiz. Please try reloading the page, and if the problem persists, feel free to provide feedback."
+    # Question Generator
+    prompt = f"""
+        Generate 10 multiple choice quiz questions based on the following text:
+
+        "{str(content_obj)}"
+
+        Format the output as a JSON array of objects, where each object contains:
+        - "question": The quiz question.
+        - "options": An array of answer options (for multiple_choice).
+        - "correct_answer": The correct answer.
+        """
+    data = {
+        'contents': [{'parts': [{'text': prompt}]}]
+    }
+    dictionary = {
+        'summary': str(content_obj),
+        'questions': []
+    }
+    try:
+        response = requests.post(ai_url , headers=headers, data=json.dumps(data))
+        result = response.json()
+        question_obj = json.loads(result['candidates'][0]['content']['parts'][0]['text'].replace("\n", " ").replace("```json", "").replace("```", ""))
+        questions = []
+        for question in question_obj:
+            availables= ['optionA','optionB','optionC','optionD']
+            quest = {
+                'question': question['question'],
+            }
+            i=0
+            for option in availables:
+                quest[option] = question['options'][i]
+                i+=1
+            quest['correct'] = question['correct_answer']
+            questions.append(quest)
+        dictionary['questions'] = questions
+        return dictionary
+
+    except:
+        return "Oops, something went wrong while generating the quiz. Please try reloading the page, and if the problem persists, feel free to provide feedback."
+        
     
-    chat_prompt = f"""
-        Answer the following question based on the transcript provided.
-        ["NOTE: Provide concise answers."]
-        ["NOTE: 100 words maximum."]
-        ["NOTE: This output should be only string no formatting."]
-        ["NOTE: This is the output that is displayed as chatbot answer."]
+def summary_extract(video_id):
+    """Return the list of dictionary which represents questions."""
+    try:
+        ytt_api = YouTubeTranscriptApi()
+        transcript = ytt_api.fetch(video_id, languages=['en'])
+        full_transript = ""
+        for segment in transcript:
+            full_transript += (segment.text + " ")
+    except Exception as e:
+        return "Please ensure the video has available English subtitles. If it does and you are still seeing this message, please feel free to provide feedback."
 
-        Transcript : {full_transript}
-
-        Question : 
+    api_key = 'AIzaSyCwAek2xvYYHrU4HM_-C8K9I2-CuMxL5Ts'
+    ai_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+    headers = {
+        'Content-Type': "application/json",
+        'x-goog-api-key': api_key
+    }
+    
+    prompt = f"""
+    Summarize the following transcript. Provide the output as plain text only. Do not use any Markdown formatting, such as headings, bold text, or lists.
+    {full_transript}
     """
-    return summary_string, chat_prompt
+    data = {
+        'contents': [{'parts': [{'text': prompt}]}]
+    }
+
+    try:
+        response = requests.post(ai_url, headers=headers, data=json.dumps(data))
+        result = response.json()
+        
+        summary = result['candidates'][0]['content']['parts'][0]['text']
+        return summary
+
+    except Exception as e:
+        return "Sorry, we were unable to generate the summary. Please try again, and if the problem persists, feel free to provide feedback."
+    
